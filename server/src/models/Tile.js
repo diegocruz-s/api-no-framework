@@ -1,9 +1,10 @@
 class Tile {
-    constructor({ id, name, image, url }){
+    constructor({ id, name, image, url, userId }){
         this.id = id
         this.name = name
         this.image = image 
         this.url = url
+        this.userId = userId
     }
 
     isValid() {

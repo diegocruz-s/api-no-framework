@@ -16,6 +16,7 @@ export const checkAuth = (request, response, pathUrl) => {
         }
 
         request.userId = token.split('_')[0]
+        request.valueToken = token
         return true
     } catch (error) {
         response.writeHead(401, { 'Content-Type': 'application/json' })

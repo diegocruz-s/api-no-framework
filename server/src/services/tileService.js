@@ -9,17 +9,17 @@ class TileService {
         return this.repository.create(data)
     }
 
-    list (tileId) {
-        return this.repository.list(tileId)
+    list (userId, tileId) {
+        return this.repository.list(userId, tileId)
     }
 
-    update (tileId, data) {
-        return this.repository.update(tileId, data)
+    update (userId, tileId, data) {
+        return this.repository.update(userId, tileId, data)
 
     }
 
-    delete (tileId) {
-        return this.repository.delete(tileId)
+    delete (userId, tileId) {
+        return this.repository.delete(userId, tileId)
 
     }
 

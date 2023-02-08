@@ -4,7 +4,6 @@ import { checkAuth } from './utils/checkAuth.js'
 
 const handler = (request, response) => {
     const { url, method } = request
-    //request.headers.authorization = 'token'
     const [_, route, id] = url.split('/')
     let pathUrl
 
@@ -19,11 +18,6 @@ const handler = (request, response) => {
     if(!resultAuth) {
         return
     }
-    // if(resultAuth.error) {
-    //     response.writeHead(401, { 'Content-Type': 'application/json' })
-    //     response.write(JSON.stringify({ error: resultAuth.error }))
-    //     return response.end()
-    // }
 
     console.log('pathUrl:', pathUrl)
 

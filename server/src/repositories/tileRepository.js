@@ -18,7 +18,8 @@ class TileRepository {
 
     create (data) {
         const allTiles = this.#allTile()
-        const existsTile = this.list(data.id)
+        const existsTile = this.list(data.id)[0]
+        console.log('et', existsTile)
         if(existsTile) {
             this.error.message = 'Tile is already exists'
             this.error.status = 409
@@ -37,8 +38,9 @@ class TileRepository {
 
     }
 
-    list (tileId) {
-        const allTiles = this.#allTile()
+    list (userId, tileId) {
+        console.log(userId)
+        const allTiles = this.#allTile().filter(tile => tile.userId === userId)
         if(!tileId) {
             return allTiles
         }
@@ -46,14 +48,20 @@ class TileRepository {
         return allTiles.find(tile => tile.id === tileId)
     }
 
-    update (tileId, data) { 
+    update (userId, tileId, data) { 
         const allTiles = this.#allTile()
-        const tileForUpdate = this.list(tileId)
-
+        const tileForUpdate = this.list(userId, tileId)
         if(!tileForUpdate) {
             return {
                 error: 'Tile not found'
             }
+        }
+
+        if(userId !== tileForUpdate.userId) {
+            this.error.message = 'You can only delete your tiles'
+            this.error.status = 422
+            
+            return { error: this.error }
         }
 
         const newDatasTile = {}
@@ -79,16 +87,24 @@ class TileRepository {
 
     }
 
-    delete(tileId) {
+    delete(userId, tileId) {
         const allTiles = this.#allTile()
-        const existsTile = this.list(tileId)
-        console.log(existsTile)
+        const existsTile = this.list(userId, tileId)
+        console.log('et:', existsTile)
         if(!existsTile) {
             this.error.message = 'Tile not exists'
             this.error.status = 404
             
             return { error: this.error }
         }
+
+        if(userId !== existsTile.userId) {
+            this.error.message = 'You can only delete your tiles'
+            this.error.status = 422
+            
+            return { error: this.error }
+        }
+
         const newAllTiles = allTiles.filter(tile => tile.id !== tileId)
 
         writeFileSync(this.file, JSON.stringify(newAllTiles))
