@@ -1,8 +1,10 @@
 import http from 'node:http'
 import { routes } from './routes.js'
+import { checkAuth } from './utils/checkAuth.js'
 
 const handler = (request, response) => {
     const { url, method } = request
+    //request.headers.authorization = 'token'
     const [_, route, id] = url.split('/')
     let pathUrl
 
@@ -12,7 +14,18 @@ const handler = (request, response) => {
     } else {
         pathUrl = `/${route}:${method.toLowerCase()}`
     }
-    console.log(pathUrl)
+
+    const resultAuth = checkAuth(request, response, pathUrl)
+    if(!resultAuth) {
+        return
+    }
+    // if(resultAuth.error) {
+    //     response.writeHead(401, { 'Content-Type': 'application/json' })
+    //     response.write(JSON.stringify({ error: resultAuth.error }))
+    //     return response.end()
+    // }
+
+    console.log('pathUrl:', pathUrl)
 
     const res = routes[pathUrl] || routes.default
 

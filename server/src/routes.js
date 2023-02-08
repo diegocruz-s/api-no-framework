@@ -1,10 +1,74 @@
 import { randomUUID } from 'node:crypto';
 import { generateTileService } from "./factories/tileFactory.js";
+import { generateUserService } from './factories/userFactory.js';
 import { Tile } from './models/Tile.js'
+import { User } from './models/User.js';
 const tileService = generateTileService()
+const userService = generateUserService()
 
 const routes = {
-    '/list:get': async(request, response) => {
+    '/login:post': async(request, response) => {
+        for await (const data of request) {
+            const body = JSON.parse(data)
+            if(!body.email || !body.password) {
+                response.writeHead(422, { 'Content-Type': 'application/json' })
+                response.write(JSON.stringify({ error: 'Invalid datas' }))
+                return response.end()
+            }
+
+            const datasLogin = userService.login({
+                email: body.email,
+                password: body.password
+            })
+            response.writeHead(200, { 'Content-Type': 'application/json' })
+            response.write(JSON.stringify({ data: datasLogin }))
+            return response.end()
+        }
+    },
+
+    '/user:post': async(request, response) => {
+        for await (const data of request) {
+            try {
+                const datasUser = JSON.parse(data)
+                console.log(datasUser)
+                const { name, email, password } = datasUser
+                if(!name || !email || !password) {
+                    throw new Error('Invalid Datas')
+                }
+                const id = randomUUID()
+
+                const newUser = new User({id, name, email, password})
+                const verifyUser = newUser.isValid()
+                
+                if(!verifyUser.valid) {
+                    throw new Error(verifyUser.error)
+                }
+
+                const user = userService.create(newUser)
+
+                response.writeHead(201, { 'Content-Type': 'application/json' })
+                response.write(JSON.stringify(user))
+                response.end()
+
+            } catch (error) {
+                const messageError = error.message.split(',')
+                
+                response.writeHead(400, { 'Content-Type': 'application/json' })
+                response.write(JSON.stringify({ error: messageError }))
+                return response.end()
+            }
+        }
+    },
+
+    '/user:patch': async(request, response) => {
+        response.end(JSON.stringify({ update: 'user' }))
+    },
+
+    '/logout:post': async(request, response) => {
+        response.end(JSON.stringify({ logout: 'logout' }))
+    },
+
+    '/tile:get': async(request, response) => {
         const allTiles = tileService.list()
 
         response.writeHead(200, { 'Content-Type': 'application/json' })
@@ -12,7 +76,7 @@ const routes = {
         response.end()
     },
 
-    '/list/id:get': async(request, response) => {
+    '/tile/id:get': async(request, response) => {
         const id = request.id
         const tile = tileService.list(id)
 
@@ -30,7 +94,7 @@ const routes = {
 
                 const newTile = new Tile({id, name, image, url})
                 const verifyTile = newTile.isValid()
-                console.log(verifyTile)
+                
                 if(!verifyTile.valid) {
                     throw new Error(verifyTile.error)
                 }
