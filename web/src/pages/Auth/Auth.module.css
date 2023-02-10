@@ -1,0 +1,57 @@
+.componentForm {
+    width: 80%;
+}
+.elementForm {
+    width: 100%;
+    border-bottom: 1px solid #fff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+}
+.elementForm input {
+    flex: 1;
+    margin-left: .4em;
+    font-size: 1em;
+    padding: .3em;
+    background-color: transparent;
+    border: none;
+}
+.elementForm svg {
+    font-size: 1.5em;
+    margin-left: .1em;
+    outline: none;
+}
+.elementForm input:focus {
+    outline: none;
+}
+.elementForm input:focus::placeholder {
+    color: #cfcfcf;
+}
+.sendResetForm {
+    margin-top: 2em;
+    display: flex;
+    justify-content: space-between;
+}
+.sendResetForm button {
+    cursor: pointer;
+    font-size: 1em;
+    padding: .5em;
+    border: none;
+    border-radius: .4em;
+    transition: .3s;
+}
+.sendResetForm button[type='submit'] {
+    background-color: transparent;
+    border: 1px solid #fff;
+}
+.sendResetForm button[type='submit']:hover {
+    background-color: #fff;
+    color: rgb(122, 101, 149);
+}
+.sendResetForm button[type='reset'] {
+    background-color: transparent;
+    border: 1px solid rgb(233, 44, 19);
+}
+.sendResetForm button[type='reset']:hover {
+    background-color: rgb(233, 44, 19);
+}

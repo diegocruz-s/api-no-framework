@@ -12,7 +12,11 @@ class UserController {
             const body = JSON.parse(data)
             if(!body.email || !body.password) {
                 response.writeHead(422, { 'Content-Type': 'application/json' })
-                response.write(JSON.stringify({ error: 'Invalid datas' }))
+                response.write(JSON.stringify({ error: {
+                    message: ['Invalid datas'],
+                    code: 'BAD_REQUEST',
+                    status: 422
+                }}))
                 return response.end()
             }
 
@@ -20,11 +24,11 @@ class UserController {
                 email: body.email,
                 password: body.password
             })
-            response.writeHead(200, { 'Content-Type': 'application/json' })
-            response.write(JSON.stringify({ data: datasLogin }))
+            response.writeHead(200, { "Content-Type": "application/json" })
+            response.write(JSON.stringify(datasLogin))
             return response.end()
         }
-    }
+    } 
 
     async logout (request, response) {
         const userId = request.userId
@@ -42,9 +46,7 @@ class UserController {
                 const datasUser = JSON.parse(data)
                 console.log(datasUser)
                 const { name, email, password } = datasUser
-                if(!name || !email || !password) {
-                    throw new Error('Invalid Datas')
-                }
+
                 const id = randomUUID()
 
                 const newUser = new User({id, name, email, password})
@@ -64,7 +66,11 @@ class UserController {
                 const messageError = error.message.split(',')
                 
                 response.writeHead(400, { 'Content-Type': 'application/json' })
-                response.write(JSON.stringify({ error: messageError }))
+                response.write(JSON.stringify({ error: {
+                    message: messageError,
+                    status: 400,
+                    code: 'BAD_REQUEST'
+                } }))
                 return response.end()
             }
         }

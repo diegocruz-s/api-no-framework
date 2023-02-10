@@ -91,7 +91,8 @@ class UserRepository {
 
         if(!existUser) {
             this.error.status = 404
-            this.error.message = 'Authentication invalid'
+            this.error.message = ['Authentication invalid']
+            console.log('thisError', this.error)
             return {
                 error: this.error
             }
@@ -101,7 +102,7 @@ class UserRepository {
 
         if(!verifyPassword) {
             this.error.status = 422
-            this.error.message = 'Authentication invalid'
+            this.error.message = ['Authentication invalid']
             return {
                 error: this.error
             }

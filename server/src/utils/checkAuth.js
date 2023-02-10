@@ -1,3 +1,9 @@
+import { readFileSync } from 'node:fs'
+import path, { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 export const checkAuth = (request, response, pathUrl) => {
     if(pathUrl.includes('login') || pathUrl.includes('user:post')) {
         return true
@@ -12,6 +18,14 @@ export const checkAuth = (request, response, pathUrl) => {
         const [, token] = authorization.split(' ')
 
         if(!token) {
+            throw new Error('Token not found')
+        }
+
+        const checkToken = JSON.parse(
+            readFileSync(join(__dirname, '../../database', 'tokens.json'))
+        ).filter(elementToken => elementToken.value === token)[0]
+
+        if(!checkToken) {
             throw new Error('Token not found')
         }
 
