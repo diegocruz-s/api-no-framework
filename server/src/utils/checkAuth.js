@@ -10,9 +10,9 @@ export const checkAuth = (request, response, pathUrl) => {
     }
     try {
         const authorization = request.headers.authorization
-
+        console.log(authorization)
         if(!authorization) {
-            throw new Error('Authentication required')
+            throw new Error('Authentication required!')
         }
 
         const [, token] = authorization.split(' ')

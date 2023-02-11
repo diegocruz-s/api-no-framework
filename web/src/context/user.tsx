@@ -54,7 +54,10 @@ export function AuthContextProvider ({ children }: PropsAuthContext) {
     }, [])
 
     useEffect(() => {
-        if(user) return setAuth(true)
+        if(user) {
+            setAuth(true)
+            api.defaults.headers.authorization = `Bearer ${user.token}`
+        }
     }, [user])
 
     const resetStates = () => {
@@ -89,7 +92,6 @@ export function AuthContextProvider ({ children }: PropsAuthContext) {
             .then(res => { return res.data })
             .catch(err => { return err.response.data })
 
-        console.log('resLogin', res)
         if(res.error) {
             setError(res.error)
             setLoading(false)
@@ -101,11 +103,25 @@ export function AuthContextProvider ({ children }: PropsAuthContext) {
         api.defaults.headers.authorization = `Bearer ${res.token}`
 
         setLoading(false)
-        console.log('login:', user)
     }
-    // {user: {…}, token: 'c783410a-429b-48e3-8f98-5501777254f1_ab027b64-5a2b-4567-8deb-c2e3725fbcb8'}
+
     const logout = async() => {
-        console.log('logout')
+        resetStates()
+        setLoading(true)
+        const res = await api.post('/logout')
+            .then(res => { return res.data })
+            .catch(err => { return err.response.data })
+
+        if(res.error) {
+            setError(res.error)
+            setLoading(false)
+            return
+        }
+        api.defaults.headers.authorization = ``
+        localStorage.removeItem('userStorage')
+        setAuth(false)
+        
+        setLoading(false)
     }
 
     const update = async(user: { name?: string, password?: string }) => {

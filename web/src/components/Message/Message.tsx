@@ -16,10 +16,10 @@ export function Message ({ message, type } : MessageProps) {
     }, [])
 
     return (
-        <div className="message">
+        <div className={styles.message}>
             {showMessage && (
                 <h3
-                    className={styles[type]}
+                    className={type===`error` ? styles.error : styles.success}
                 >{message}</h3>
             )}
         </div>

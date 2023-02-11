@@ -1,13 +1,8 @@
-.App {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(91.7deg, rgb(50, 25, 79) -4.3%, rgb(122, 101, 149) 101.8%);
-}
 .contentForm {
-    background-color: transparent;
+    margin: auto;
+    position: relative;
+    top: 50vh;
+    transform: translateY(-50%);
     width: 60%;
     display: flex;
     flex-direction: column;

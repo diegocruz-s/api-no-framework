@@ -2,16 +2,22 @@ import styles from './App.module.css'
 import { useContext, useState } from 'react'
 import { Auth } from './pages/Auth/Auth'
 import { AuthContext } from './context/user'
+import { TileContext } from './context/tile'
+import { Home } from './pages/Home/Home'
 
 function App() {
   const [formLogin, setFormLogin] = useState<boolean>(true)
   const { abc, user, auth } = useContext(AuthContext)!
+
   console.log('auth:', auth)
   return (
     <div className={styles.App}>
 
       {auth ? (
-        <h1>Home</h1>
+        <>
+          <Home />
+          
+        </>
       ) : (
         <div className={styles.contentForm}>
 

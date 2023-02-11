@@ -26,7 +26,7 @@ class UserRepository {
         const existsUser = allUsers.find(user => user.email === data.email)
         
         if(!!existsUser) {
-            this.error.message = 'Email already used'
+            this.error.message = ['Email already used']
             this.error.status = 422
             return {
                 error: this.error
@@ -129,6 +129,7 @@ class UserRepository {
     }
 
     logout (userId, valueToken) {
+        console.log(userId, valueToken)
         const newDatasTokens = JSON.parse(readFileSync(this.fileToken)).filter(token => {
             if(token.userId !== userId || token.value !== valueToken) {
                 return token

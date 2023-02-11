@@ -1,0 +1,27 @@
+.allTiles {
+    width: calc( (var(--widthTile) * 4) + (1em * 4) );
+    display: grid;
+    grid-template-columns: var(--widthTile) var(--widthTile) var(--widthTile) var(--widthTile);
+    gap: 1em;
+    margin: auto;
+    margin-top: 1em;
+}
+.tileAddPage {
+    width: var(--widthTile);
+    height: calc(var(--widthTile) / 2);
+    border-radius: .3em;
+    border: none;
+    background-color: rgba(0,0,0,.2);
+    clip-path: var(--clipTile);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.navbar {
+    width: calc( (var(--widthTile) * 4) + (1em * 4) );
+    margin: auto;
+    padding: .8em;
+    margin-bottom: 2em;
+    text-align: end;
+}
