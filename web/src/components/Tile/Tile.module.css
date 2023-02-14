@@ -22,15 +22,15 @@
     border-radius: .5em;
 }
 .tile .optionsTile {
-    display: none;
+    display: block;
     cursor: pointer;
     line-height: 0;
     z-index: 2;
     position: absolute;
     font-size: 1.5em;
-    text-shadow: 1px 1px 2px #000, 0 0 1em #000, 0 0 0.2em #000;    
     right: .4em;
     top: .3em;
+    color: transparent;
 }
 .nameTile p{
     position: absolute;
@@ -40,17 +40,40 @@
     width: 100%;
     text-align: center;
 }
-.tile:not( :hover) {
-    animation: slidedown .3s forwards;
-}
 .tile:hover {
     animation: slidetop .3s forwards;
-}
+} 
+.tile:not( :hover) {
+    animation: slidedown .3s forwards;
+} 
 .tile:hover > .optionsTile {
-    display: block;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000, 0 0 1em #000, 0 0 0.2em #000;    
 }
+
 .content:hover .nameTile p {
     animation: changeColorP .6s forwards;
+} 
+.contentPopover {
+    background-color: rgb(78, 78, 78);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 8em;
+    margin-top: 1em;
+}
+.contentPopover button {
+    border: none;
+    border-bottom: 1px solid #fff;
+    background-color: transparent;
+    padding: .3em;
+    cursor: pointer;
+}
+.contentPopover:hover {
+    background-color: aqua;
+}
+.backAnimation {
+    animation: slidedown .3s forwards;
 }
 
 @keyframes changeColorP {
@@ -63,10 +86,10 @@
 }
 
 @keyframes slidetop {
-    0% {
+    from {
         bottom: 0;
     }
-    100% {
+    to {
         bottom: 1.1em;
     }
 }
