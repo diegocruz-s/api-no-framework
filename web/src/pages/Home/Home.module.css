@@ -25,3 +25,13 @@
     margin-bottom: 2em;
     text-align: end;
 }
+
+@media (max-width: 880px) {
+    .allTiles {
+        grid-template-columns: var(--widthTile) var(--widthTile);
+        width: calc( (var(--widthTile) * 2) + (1em) );
+    }
+    .navbar {
+        width: calc( (var(--widthTile) * 2) + (1em) );
+    }
+}

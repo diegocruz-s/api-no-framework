@@ -82,6 +82,7 @@ class TileRepository {
         writeFileSync(this.file, JSON.stringify(newAllTiles))
 
         return {
+            tile: newTile,
             success: 'Tile updated'
         }
 

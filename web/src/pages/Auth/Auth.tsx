@@ -1,6 +1,5 @@
 import styles from './Auth.module.css'
 import { FormEvent, useContext, useState } from "react"
-import { ElementForm } from "../../components/ElementForm/elementForm"
 import { EnvelopeSimple, EyeClosed, Eye, Newspaper, Password } from 'phosphor-react'
 import { AuthContext } from '../../context/user'
 import { Message } from '../../components/Message/Message'

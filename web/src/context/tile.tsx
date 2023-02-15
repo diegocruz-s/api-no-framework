@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { api } from "../utils/axios";
 
 type PropsTileContext = {
@@ -12,10 +12,17 @@ type Tiles = {
     url: string
     userId: string
 }
+type TileUpdateAndCreate = {
+    name?: string
+    image?: string
+    url?: string
+}
 
 type ContentTileContext = {
-    qualquerCoisa: string
     getTiles: () => void
+    updateTile: (id: string, datas: TileUpdateAndCreate) => void
+    createTile: (datas: TileUpdateAndCreate) => void
+    deleteTile: (id: string) => void
     tiles: Tiles[]
     loading: boolean
     error: Error | null
@@ -47,13 +54,80 @@ export function TileContextProvider ({ children }: PropsTileContext) {
         setLoading(false)
     }
 
-    const valueContext = {
-        qualquerCoisa: 'Qualquer coisa',
+    const updateTile = async (id: string, datas: TileUpdateAndCreate) => {
+        resetStates()
+        setLoading(true)
+        const res = await api.patch(`/tile/${id}`, datas)
+            .then(res => { return res.data })
+            .catch(err => { return err.response.data })
+        if(res.error) {
+            setError(res.error[0])
+            setLoading(false)
+            return
+        }
+
+        const newTiles = tiles.map(tile => {
+            if(tile.id === id) {
+                return res.tile
+            } else {
+                return tile
+            }
+        })
+
+        setTiles(newTiles)
+        setSuccess(res.success)
+        setLoading(false)
+    }
+
+    const createTile = async (datas: TileUpdateAndCreate) => {
+        resetStates()
+        setLoading(true)
+        const res = await api.post('/tile', datas)
+            .then(res => { return res.data })
+            .catch(err => { return err.response.data })
+        if(res.error) {
+            setError(res.error[0])
+            setLoading(false)
+            return
+        }
+
+        const newTiles = [...tiles, res.tile]
+
+        setTiles(newTiles)
+        setSuccess(res.success)
+        setLoading(false)
+
+    }
+
+    const deleteTile = async (id: string) => {
+        resetStates()
+        setLoading(true)
+
+        const res = await api.delete(`/tile/${id}`)
+            .then(res => { return res.data })
+            .catch(err => { return err.response.data })
+        if(res.error) {
+            setError(res.error)
+            setLoading(false)
+            return
+        }
+
+        const newTiles = tiles.filter(tile => tile.id !== id)
+
+        setTiles(newTiles)
+        setLoading(false)
+        setSuccess(res.success)
+    }
+
+    const valueContext: ContentTileContext = {
         getTiles,
         loading,
         error,
         success,
-        tiles
+        tiles,
+        updateTile,
+        createTile,
+        deleteTile
     }
 
     return (

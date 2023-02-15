@@ -1,66 +1,83 @@
 import styles from './Tile.module.css'
-import { DotsThree } from 'phosphor-react'
-import React, { useState } from 'react';
-import * as Popover from '@radix-ui/react-popover';
+import { useContext, useEffect, useState } from 'react';
+import { FormEditCreate } from '../FormEditCreate/FormEditCreate';
+import { TileContext } from '../../context/tile';
 
 type TileProps = {
-    tile: {
-        id: string,
-        name: string,
-        image: string,
-        url: string,
-        userId: string
-    }
+  tile: {
+    id: string,
+    name: string,
+    image: string,
+    url: string,
+    userId: string
+  }
 }
 
-export function Tile ({ tile }: TileProps) {
-    const [hoverTile, setHoverTile] = useState<boolean>(false)
-    const [hoverContent, setHoverContent] = useState<boolean>(false)
-    const [isOpen, setIsOpen] = useState(false);
-    
-    console.log('HC', hoverContent)
-    console.log('HT', hoverTile)
-    const { id, image, name, url } = tile
-    return (
-        <div className={styles.content}>
-            
-            <div 
-                className={styles.tile}
-                onMouseEnter={() => setHoverTile(true)}
-                onMouseLeave={() => setHoverTile(false)}
-            >
-                <a href={url} target="_blank">
-                    <img src={image} className={styles.image} alt={name} />
-                </a>
-                
-                <Popover.Root>
-                    <Popover.Trigger asChild className={styles.optionsTile}>
-                        <p>...</p>
-                    </Popover.Trigger>
+export function Tile({ tile }: TileProps) {
+  const [hoverTile, setHoverTile] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [formEdit, setFormEdit] = useState<boolean>(false)
+  const { deleteTile } = useContext(TileContext)!
 
-                    <Popover.Portal>
-                        <Popover.Content 
-                            className={styles.contentPopover}
-                            style={{ display: hoverTile ? 'flex' : 'none' }}
-                            onMouseEnter={() => setHoverContent(true)}
-                            onMouseLeave={() => setHoverContent(false)}
-                        >
-                            <button onClick={() => console.log(`Delete ${tile.id}`)}>Delete Tile</button>
-                            <button onClick={() => console.log(`Edit ${tile.id}`)}>Edit Tile</button>
-                        </Popover.Content>
+  const handleDelete = async (id: string) => {
+    await deleteTile(id)
+  }
 
-                    </Popover.Portal>
-                </Popover.Root>
-                
-            </div>
+  useEffect(() => {
+    setHoverTile(false)
+    setIsOpen(false)
+  }, [formEdit])
 
-            <div className={styles.nameTile}>
-                <p>
-                    {name}
-                </p>
-            </div>
-            
-        </div>
+  const { id, image, name, url } = tile
+  return (
+    <div
+      className={styles.content}
+      onMouseEnter={() => {
+        setHoverTile(true);
+      }}
+      onMouseLeave={() => {
+        setHoverTile(false)
+        setIsOpen(false)
+      }}
+    >
+      <div
+        className={`${styles.tile}`}
+      >
+        <a href={url} target="_blank">
+          <img src={image} className={styles.image} alt={name} />
+        </a>
+
         
-    )
+          {hoverTile && (
+              <div className={styles.optionsTile} onClick={() => setIsOpen(!isOpen)}>
+                <p>...</p>
+              </div>
+          )}
+
+          {(isOpen && hoverTile) && (
+            <div className={styles.contentPopover}>
+              <button onClick={() => handleDelete(tile.id)}>
+                Delete Tile
+              </button>
+              <button onClick={() => {
+                setFormEdit(true)
+                setHoverTile(false)
+              }}>
+                Edit Tile
+              </button>
+            </div>
+          )}
+         
+        
+      </div>
+
+      {formEdit && (
+        <FormEditCreate formEdit={formEdit} setFormEdit={setFormEdit} tile={tile} />
+      )}
+
+      <div className={styles.nameTile}>
+        {hoverTile && <p>{name}</p>}
+      </div>
+    </div>
+  );
 }

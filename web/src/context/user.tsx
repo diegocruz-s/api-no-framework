@@ -25,7 +25,6 @@ type Error = {
 }
 
 type ContentAuthContext = {
-    abc: string,
     user: UserStorage | null
     auth: boolean
     loading: boolean
@@ -34,7 +33,6 @@ type ContentAuthContext = {
     create: (user: User) => void
     login: (user: User) => void
     logout: () => void
-    update: (user: User) => void
 }
 
 export const AuthContext = createContext<ContentAuthContext | null>(null)
@@ -50,7 +48,6 @@ export function AuthContextProvider ({ children }: PropsAuthContext) {
     useEffect(() => {
         const userStorage = JSON.parse(localStorage.getItem('userStorage') || '{}')
         if(userStorage.user) return setUser(userStorage)
-            // maybe authorization??
     }, [])
 
     useEffect(() => {
@@ -72,9 +69,7 @@ export function AuthContextProvider ({ children }: PropsAuthContext) {
         const res = await api.post('/user', user)
             .then(res => { return res.data })
             .catch(err => { return err.response.data })
-        console.log('error', !!res.error)
         if(res.error) {
-            console.log('error', res.error)
             setError(res.error)
             setLoading(false)
             return
@@ -124,17 +119,11 @@ export function AuthContextProvider ({ children }: PropsAuthContext) {
         setLoading(false)
     }
 
-    const update = async(user: { name?: string, password?: string }) => {
-        console.log('update', user)
-    }
-
     const valueContext = {
-        abc: 'Diego Cruz\'s',
         user,
         create,
         login,
         logout,
-        update,
         auth,
         loading,
         success,
